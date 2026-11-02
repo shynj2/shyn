@@ -6,7 +6,7 @@
 window.CS_T = {
 
   en: {
-    cta_other:"the other side of me",
+    cta_other:"Back to the main page",
     /* page */
     title: "Shayan Mirkhani — Web Designer & SEO Specialist",
     desc: "Shayan Mirkhani: web designer, SEO specialist and digital marketer. WordPress, Elementor, HTML/CSS, Google Ads and Search Console.",
@@ -109,7 +109,7 @@ window.CS_T = {
   },
 
   fa: {
-    cta_other:"روی دیگرِ من",
+    cta_other:"بازگشت به صفحهٔ اصلی",
     /* page */
     title: "شایان میرخانی — طراح وب و متخصص سئو",
     desc: "شایان میرخانی: طراح وب، متخصص سئو و دیجیتال مارکتر. وردپرس، المنتور، HTML/CSS، گوگل ادز و سرچ کنسول.",
