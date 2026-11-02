@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..900&family=Vazirmatn:wght@300..900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
@@ -108,12 +109,45 @@ body{padding-bottom:64px}
 #ctip{position:absolute;z-index:5;pointer-events:none;background:var(--ink);color:var(--bg);padding:8px 13px;border-radius:12px;font-size:12px;font-weight:700;white-space:nowrap;transform:translate(-50%,-130%);opacity:0;transition:opacity .25s,left .18s var(--ease-out),top .18s var(--ease-out)}
 #ctip.on{opacity:1}
 .rg{width:100%;max-width:210px;transform:rotate(-90deg)}
+
+/* ===== cursor v2 ===== */
+#cur{width:40px;height:40px;border:1.5px solid rgba(244,244,249,.55);mix-blend-mode:difference;transition:width .4s var(--ease-spring),height .4s var(--ease-spring),opacity .3s,background .3s,border-color .3s,transform .25s var(--ease-out)}
+#cur i{display:none}
+#cur.big{width:66px;height:66px;background:rgba(244,244,249,.14);border-color:var(--ink)}
+#cur.view{width:96px;height:96px;background:var(--ink);border-color:var(--ink);mix-blend-mode:normal}
+#cur.dn{transform:translate(-50%,-50%) scale(.82)}
+#cur b{position:absolute;inset:0;display:grid;place-items:center;font-size:12.5px;font-weight:800;color:var(--bg);opacity:0;transition:opacity .25s}
+#cur.view b{opacity:1}
+#cdot{position:fixed;top:0;left:0;z-index:91;width:7px;height:7px;border-radius:99px;background:#fff;mix-blend-mode:difference;pointer-events:none;transform:translate(-50%,-50%);opacity:0;transition:opacity .3s,width .3s,height .3s}
+#cdot.on{opacity:1}
+@media(pointer:fine){html.hc,html.hc *{cursor:none!important}}
+@media(pointer:coarse){#cdot{display:none}}
+/* ===== icons / skills ===== */
+.msr{font-family:'Material Symbols Rounded';font-weight:normal;font-style:normal;font-size:24px;line-height:1;letter-spacing:normal;text-transform:none;display:inline-block;white-space:nowrap;direction:ltr;font-feature-settings:'liga';-webkit-font-feature-settings:'liga';font-variation-settings:'FILL' 1,'wght' 500,'GRAD' 0,'opsz' 24;user-select:none;visibility:hidden}
+html.mi .msr{visibility:visible}
+.mqi{display:inline-flex;align-items:center;gap:10px;padding:10px 20px 10px 16px}
+html[dir=rtl] .mqi{padding:10px 16px 10px 20px}
+.mqi img{width:20px;height:20px;display:block}.mqi .msr{font-size:20px}
+/* ===== works v2 ===== */
+.wkg{display:grid;gap:22px;grid-template-columns:1fr}
+@media(min-width:700px){.wkg{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:1000px){.wkg{grid-template-columns:repeat(6,1fr)}.pw.w2{grid-column:span 2}.pw.w3{grid-column:span 3}.pw.w4{grid-column:span 4;grid-template-columns:1fr 1fr;grid-template-rows:none}
+.pw.w4 .cov{border-bottom:0;border-inline-end:1px solid var(--line)}}
+.pw{display:grid;grid-template-rows:auto 1fr;overflow:hidden;padding:0}
+.pw .cov{position:relative;min-height:200px;overflow:hidden;border-bottom:1px solid var(--line);background:radial-gradient(120% 120% at 80% 10%,color-mix(in srgb,var(--acc) 26%,transparent),transparent 60%),radial-gradient(circle at 1.5px 1.5px,color-mix(in srgb,var(--acc) 24%,transparent) 1.5px,transparent 0) 0 0/24px 24px,var(--surface)}
+.pw .gl{position:absolute;top:-4px;inset-inline-end:16px;font-weight:900;font-size:156px;line-height:1.05;color:transparent;-webkit-text-stroke:2px color-mix(in srgb,var(--acc) 78%,transparent);pointer-events:none}
+.pw .ic{position:absolute;bottom:20px;inset-inline-start:22px;font-size:56px;color:color-mix(in srgb,var(--acc) 88%,transparent)}
+.pw .cv{position:absolute;top:16px;inset-inline-start:16px;background:var(--bg);color:var(--acc);border-color:color-mix(in srgb,var(--acc) 40%,transparent)}
+.pw .bd{padding:24px 26px 26px;display:grid;gap:10px;align-content:start}
+.pw .go{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--acc);margin-top:4px}
+.pw .go .msr{font-size:18px;transition:transform .4s var(--ease-spring)}
+.pw:hover .go .msr{transform:translate(3px,-3px)}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 <!-- این به عشق خودت بود عامو صالح -->
-<div id="noise"></div><div id="cur"><i></i></div><div id="flash"></div>
+<div id="noise"></div><div id="cur"><b></b></div><div id="cdot"></div><div id="flash"></div>
 <div id="pre"><div style="text-align:center"><div class="blob" style="width:96px;height:96px;margin:auto;background:var(--s2);border:1px solid var(--line);display:grid;place-items:center;font-weight:900;font-size:28px">SM</div><div id="preT"><div id="preB"></div></div></div></div>
 <div id="pbar"><i></i></div>
 <div hidden id="secret">این به عشق خودت بود عامو صالح</div>
@@ -198,7 +232,7 @@ body{padding-bottom:64px}
 <section id="works"><div class="wrap">
   <span class="tag" data-r><i></i><span data-i="k_works"></span></span>
   <h2 class="ttl" data-ttl="t_works"><span class="l"><span></span></span> <span class="l"><span class="outl"></span></span></h2>
-  <div class="g2" id="wk"></div>
+  <div class="wkg" id="wk"></div>
 </div></section>
 
 <section id="contact" style="position:relative;overflow:hidden"><div class="orb blob" style="width:520px;height:520px;inset-inline-end:-160px;top:0" data-par="30"></div>
@@ -264,44 +298,48 @@ p2d:"سایت و حضور در نتایج جستجو برای یک مجموعه 
 p3d:"پروژه طراحی سایت.",p3t:"طراحی سایت",p3r:"طراح سایت",
 p4d:"طراحی و ادمینی سایت.",p4t:"طراحی سایت · ادمینی سایت",p4r:"طراح سایت · ادمین سایت",
 visit:"مشاهده سایت",footer:"© ۲۰۲۶ شایان میرخانی"}};
+D.en.vw='Visit';D.fa.vw='مشاهده';['P','A','N','A','N','T'].forEach((x,i)=>D.en['wg'+(i+1)]=x);['پ','آ','ن','ا','۱','ت'].forEach((x,i)=>D.fa['wg'+(i+1)]=x);
 D.en.p5d=D.en.p6d=D.en.p4d;D.en.p5t=D.en.p6t=D.en.p4t;D.en.p5r=D.en.p6r=D.en.p4r;
 D.fa.p5d=D.fa.p6d=D.fa.p4d;D.fa.p5t=D.fa.p6t=D.fa.p4t;D.fa.p5r=D.fa.p6r=D.fa.p4r;
 const t=k=>(D[lang]&&D[lang][k])||D.en[k]||k;
 const nf=n=>new Intl.NumberFormat(lang==='fa'?'fa-IR':'en').format(n);
 
 /* ================= data ================= */
-const SK=[['E','sk1','a',85,'web'],['WP','sk2','a',88,'web'],['</>','sk3','a',80,'web'],['{ }','sk8','p',78,'web'],['SEO','sk5','a',90,'seo'],['GSC','sk6','a',85,'seo'],['Moz','sk9','p',70,'seo'],['SF','sk10','p',76,'seo'],['DM','sk4','a',82,'mkt'],['Ad','sk7','p',75,'mkt']];
-const WK=[['pooyansport.com'],['aidbax.ir'],['newabzar.com'],['abzaramini.com'],['newabzar1.ir'],['takabzarplus.ir']];
+const SK=[['elementor|FF5C8A|widgets','sk1','a',85,'web'],['wordpress|3B9AD4|language','sk2','a',88,'web'],['html5|FF6A3D|code','sk3','a',80,'web'],['schemaorg|7FB2FF|data_object','sk8','p',78,'web'],['|F5C542|travel_explore','sk5','a',90,'seo'],['googlesearchconsole|5B9BFF|search_insights','sk6','a',85,'seo'],['moz|3CB4E6|analytics','sk9','p',70,'seo'],['screamingfrog|6FCF97|bug_report','sk10','p',76,'seo'],['|FF8FA3|campaign','sk4','a',82,'mkt'],['googleads|FBBC04|ads_click','sk7','p',75,'mkt']];
+const ico=(sp,z)=>{const[a,c,f]=sp.split('|');return a?`<img src="https://cdn.simpleicons.org/${a}/${c}" alt="" width="${z}" height="${z}" loading="lazy" data-f="${f}" data-c="${c}" onerror="icoFail(this)">`:`<span class="msr" style="color:#${c}">${f}</span>`};
+function icoFail(i){const e=document.createElement('span');e.className='msr';e.textContent=i.dataset.f||'extension';e.style.color='#'+i.dataset.c;i.replaceWith(e)}
+const WK=[['pooyansport.com','#FF7A59','checkroom','w4'],['aidbax.ir','#B79CFF','campaign','w2'],['newabzar.com','#38BDF8','construction','w2'],['abzaramini.com','#6FCF97','handyman','w4'],['newabzar1.ir','#F5C542','hardware','w3'],['takabzarplus.ir','#FF8FA3','build','w3']];
 const JOBS={1:[2023,9,2025,5,3],2:[2022,3,2023,10,2],3:[2022,2,2023,10,2]};
 const CATS=['web','seo','mkt'].map(c=>{const a=SK.filter(s=>s[4]===c);return[c,Math.round(a.reduce((x,s)=>x+s[3],0)/a.length)]});
-$('#mq').innerHTML=[...SK,...SK].map(s=>`<span class="mqi" data-i="${s[1]}"></span>`).join('');
+$('#mq').innerHTML=[...SK,...SK].map(s=>`<span class="mqi">${ico(s[0],20)}<span data-i="${s[1]}"></span></span>`).join('');
 $('#stats').innerHTML=[[4,'+','st1'],[3,'','st2'],[6,'','st3'],[3,'','st4']].map(s=>`<div class="card hov" style="padding:24px"><b class="cnt" data-v="${s[0]}" data-s="${s[1]}" style="font-size:44px;font-weight:900">0</b><div class="c3" data-i="${s[2]}" style="font-size:12.5px;margin-top:4px;font-weight:600"></div></div>`).join('');
-$('#sk').innerHTML=SK.map(s=>`<div class="card hov sk" style="padding:22px;display:grid;gap:14px"><div style="display:flex;align-items:center;gap:12px"><span class="ltr" style="width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:var(--s2);border:1px solid var(--line);font-weight:800;font-size:13px">${s[0]}</span><div style="flex:1"><b data-i="${s[1]}"></b><div class="c3" data-i="lv_${s[2]}" style="font-size:12px"></div></div><b class="cnt c2" data-v="${s[3]}" data-s="%">0</b></div><div class="bar"><div class="sf" data-w="${s[3]}"></div></div></div>`).join('');
+$('#sk').innerHTML=SK.map(s=>`<div class="card hov sk" style="padding:22px;display:grid;gap:14px"><div style="display:flex;align-items:center;gap:12px"><span class="ltr" style="width:42px;height:42px;display:grid;place-items:center;border-radius:13px;background:var(--s2);border:1px solid var(--line);font-weight:800;font-size:13px">${ico(s[0],24)}</span><div style="flex:1"><b data-i="${s[1]}"></b><div class="c3" data-i="lv_${s[2]}" style="font-size:12px"></div></div><b class="cnt c2" data-v="${s[3]}" data-s="%">0</b></div><div class="bar"><div class="sf" data-w="${s[3]}"></div></div></div>`).join('');
 const R=[60,44,28],CI=R.map(r=>2*Math.PI*r);
 $('#rings').innerHTML=R.map((r,i)=>`<circle cx="70" cy="70" r="${r}" fill="none" stroke="var(--s2)" stroke-width="10"/><circle class="rf" data-p="${CATS[i][1]}" cx="70" cy="70" r="${r}" fill="none" stroke="var(--ink)" stroke-opacity="${[1,.7,.45][i]}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${CI[i]}" stroke-dashoffset="${CI[i]}"/>`).join('');
 $('#rleg').innerHTML=CATS.map((c,i)=>`<div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:14px"><i style="width:10px;height:10px;border-radius:99px;background:var(--ink);opacity:${[1,.7,.45][i]}"></i><span data-i="cat_${c[0]}" style="flex:1"></span><b class="cnt c2" data-v="${c[1]}" data-s="%">0</b></div>`).join('');
 $('#ex').innerHTML=[1,2,3].map(k=>`<div class="card hov" data-r style="padding:26px;display:grid;gap:10px"><b data-i="job${k}_t" style="font-size:18px"></b><div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="c3" data-i="job${k}_d" style="font-size:12.5px;font-weight:600"></span><em class="dur" data-j="${k}" style="font-style:normal"></em></div><ul class="chk c2" data-rl="job${k}_r" style="font-size:14px"></ul></div>`).join('');
 $('#lg').innerHTML=['l1','l2','l3'].map(k=>`<span class="pill" data-i="${k}"></span>`).join('');
-$('#wk').innerHTML=WK.map((w,i)=>`<a class="card hov" data-tilt data-r href="https://${w[0]}" target="_blank" rel="noopener" style="padding:26px;display:grid;gap:10px"><span class="c3" data-i="p${i+1}t" style="font-size:12px;font-weight:600"></span><b class="ltr" style="font-size:21px">${w[0]}</b><span class="c2" data-i="p${i+1}d" style="font-size:14px;line-height:1.8"></span><span class="c3" data-i="p${i+1}r" style="font-size:12.5px"></span><span style="font-size:13px;font-weight:700"><span data-i="visit"></span> ↗</span></a>`).join('');
+$('#wk').innerHTML=WK.map((w,i)=>`<a class="card hov pw ${w[3]}" data-tilt data-r href="https://${w[0]}" target="_blank" rel="noopener" style="--acc:${w[1]}"><div class="cov"><span class="gl float" data-i="wg${i+1}"></span><span class="msr ic float2">${w[2]}</span><span class="pill cv" data-i="p${i+1}t"></span></div><div class="bd"><b class="ltr" style="font-size:21px">${w[0]}</b><span class="c2" data-i="p${i+1}d" style="font-size:14px;line-height:1.8"></span><span class="c3" data-i="p${i+1}r" style="font-size:12.5px"></span><span class="go"><span data-i="visit"></span><span class="msr">north_east</span></span></div></a>`).join('');
 
 /* ================= chart data ================= */
 const ser=[];(()=>{let y=2022,m=2;while(y<2025||(y===2025&&m<=5)){let n=0,k=y*12+m;for(const j of Object.values(JOBS))if(k>=j[0]*12+j[1]&&k<=j[2]*12+j[3])n+=j[4];ser.push({y,m,n});if(++m>12){m=1;y++}}})();
 const dur=k=>{const j=JOBS[k],m=(j[2]-j[0])*12+j[3]-j[1]+1,y=Math.floor(m/12),r=m%12,p=[];if(y)p.push(nf(y)+' '+t('dy'));if(r)p.push(nf(r)+' '+t('dm'));return p.join(t('dand'))};
 const mlabel=p=>{try{return new Intl.DateTimeFormat(lang==='fa'?'fa-IR-u-ca-persian':'en',{month:'short',year:'numeric',timeZone:'UTC'}).format(new Date(Date.UTC(p.y,p.m-1,15)))}catch(e){return p.y+'/'+p.m}};
 const CH={W:760,H:280,L:34,R:14,T:14,B:34,MAX:8},cxp=i=>CH.L+i*(CH.W-CH.L-CH.R)/(ser.length-1),cyp=v=>CH.H-CH.B-v/CH.MAX*(CH.H-CH.B-CH.T);
+const sm=(()=>{let a=ser.map(p=>p.n);for(let k=0;k<3;k++){const b=a;a=b.map((_,i)=>{let t=0,w=0;for(let j=-3;j<=3;j++){const x=Math.min(b.length-1,Math.max(0,i+j)),q=4-Math.abs(j);t+=b[x]*q;w+=q}return t/w})}return a})(),cys=i=>cyp(sm[i]);
 let drawn=false;
 function chart(){const svg=$('#cs'),last=ser.length-1;
   let g='<defs><linearGradient id="gA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F4F4F9" stop-opacity=".2"/><stop offset="1" stop-color="#F4F4F9" stop-opacity="0"/></linearGradient></defs>';
   for(let i=0;i<=CH.MAX;i+=2)g+=`<line x1="${CH.L}" x2="${CH.W-CH.R}" y1="${cyp(i)}" y2="${cyp(i)}" stroke="var(--line)"/><text class="ax" x="${CH.L-8}" y="${cyp(i)+4}" text-anchor="end">${nf(i)}</text>`;
   for(let i=0;i<ser.length;i+=6)g+=`<text class="ax" x="${cxp(i)}" y="${CH.H-10}" text-anchor="middle">${mlabel(ser[i])}</text>`;
-  let d=`M${cxp(0)} ${cyp(ser[0].n)}`;for(let i=1;i<ser.length;i++)d+=`L${cxp(i)} ${cyp(ser[i-1].n)}L${cxp(i)} ${cyp(ser[i].n)}`;
-  g+=`<path id="cA" d="${d}L${cxp(last)} ${cyp(0)}L${cxp(0)} ${cyp(0)}Z" fill="url(#gA)"/><path id="cL" d="${d}" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><line id="cr" y1="${CH.T}" y2="${CH.H-CH.B}" stroke="var(--line2)" stroke-dasharray="3 3" opacity="0"/><circle class="pc" cx="${cxp(last)}" cy="${cyp(ser[last].n)}" r="8" fill="var(--ink)"/><circle id="cD" cx="${cxp(last)}" cy="${cyp(ser[last].n)}" r="5" fill="var(--bg)" stroke="var(--ink)" stroke-width="2.4"/>`;
+  const P=ser.map((_,i)=>[cxp(i),cys(i)]);let d=`M${P[0][0]} ${P[0][1]}`;for(let i=0;i<P.length-1;i++){const p0=P[i-1]||P[i],p1=P[i],p2=P[i+1],p3=P[i+2]||p2;d+=`C${p1[0]+(p2[0]-p0[0])/6} ${p1[1]+(p2[1]-p0[1])/6} ${p2[0]-(p3[0]-p1[0])/6} ${p2[1]-(p3[1]-p1[1])/6} ${p2[0]} ${p2[1]}`}
+  g+=`<path id="cA" d="${d}L${cxp(last)} ${cyp(0)}L${cxp(0)} ${cyp(0)}Z" fill="url(#gA)"/><path id="cL" d="${d}" fill="none" stroke="var(--ink)" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/><line id="cr" y1="${CH.T}" y2="${CH.H-CH.B}" stroke="var(--line2)" stroke-dasharray="3 3" opacity="0"/><circle id="cH" r="5.5" fill="var(--bg)" stroke="var(--ink)" stroke-width="2.4" opacity="0"/><circle class="pc" cx="${cxp(last)}" cy="${cys(last)}" r="8" fill="var(--ink)"/><circle id="cD" cx="${cxp(last)}" cy="${cys(last)}" r="5" fill="var(--bg)" stroke="var(--ink)" stroke-width="2.4"/>`;
   svg.innerHTML=g;
   if(hasG&&!RM&&!drawn){const L=$('#cL'),len=L.getTotalLength();gsap.set(L,{strokeDasharray:len,strokeDashoffset:len});gsap.set('#cA',{opacity:0});gsap.set('#cD,.pc',{opacity:0})}}
 $('#cs').addEventListener('pointermove',e=>{const svg=$('#cs'),tip=$('#ctip'),r=svg.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*CH.W,i=Math.max(0,Math.min(ser.length-1,Math.round((x-CH.L)/((CH.W-CH.L-CH.R)/(ser.length-1))))),p=ser[i];
-  tip.innerHTML=`<b>${nf(p.n)}</b> ${t('tipr')} · ${mlabel(p)}`;tip.style.left=Math.max(80,Math.min(r.width-80,cxp(i)/CH.W*r.width))+'px';tip.style.top=cyp(p.n)/CH.H*r.height+'px';tip.classList.add('on');
+  tip.innerHTML=`<b>${nf(p.n)}</b> ${t('tipr')} · ${mlabel(p)}`;tip.style.left=Math.max(80,Math.min(r.width-80,cxp(i)/CH.W*r.width))+'px';tip.style.top=cys(i)/CH.H*r.height+'px';const h=$('#cH');h.setAttribute('cx',cxp(i));h.setAttribute('cy',cys(i));h.setAttribute('opacity',1);tip.classList.add('on');
   const c=$('#cr');c.setAttribute('x1',cxp(i));c.setAttribute('x2',cxp(i));c.setAttribute('opacity',1)});
-$('#cs').addEventListener('pointerleave',()=>{$('#ctip').classList.remove('on');$('#cr').setAttribute('opacity',0)});
+$('#cs').addEventListener('pointerleave',()=>{$('#ctip').classList.remove('on');$('#cr').setAttribute('opacity',0);$('#cH').setAttribute('opacity',0)});
 
 /* ================= apply language ================= */
 let ri=0;const roles=()=>t('roles').split('|');
@@ -324,9 +362,12 @@ $$('.back').forEach(a=>a.addEventListener('click',e=>{if(e.metaKey||e.ctrlKey||e
 
 /* ================= pointer fx ================= */
 if(hasG&&!RM&&fine){
-  const cur=$('#cur'),qx=gsap.quickTo(cur,'left',{duration:.35,ease:'power3'}),qy=gsap.quickTo(cur,'top',{duration:.35,ease:'power3'});
-  addEventListener('pointermove',e=>{cur.classList.add('on');qx(e.clientX);qy(e.clientY)});
-  document.addEventListener('pointerover',e=>cur.classList.toggle('big',!!e.target.closest('a,button,[data-tilt]')));
+  const cur=$('#cur'),dot=$('#cdot'),lab=cur.querySelector('b'),root=document.documentElement;
+  const qx=gsap.quickTo(cur,'left',{duration:.45,ease:'power3'}),qy=gsap.quickTo(cur,'top',{duration:.45,ease:'power3'});
+  addEventListener('pointermove',e=>{if(e.pointerType==='touch')return;root.classList.add('hc');cur.classList.add('on');dot.classList.add('on');dot.style.left=e.clientX+'px';dot.style.top=e.clientY+'px';qx(e.clientX);qy(e.clientY)});
+  root.addEventListener('mouseleave',()=>{cur.classList.remove('on');dot.classList.remove('on')});
+  addEventListener('pointerdown',()=>cur.classList.add('dn'));addEventListener('pointerup',()=>cur.classList.remove('dn'));
+  document.addEventListener('pointerover',e=>{const w=e.target.closest('.pw'),b=e.target.closest('a,button,[data-tilt]');cur.classList.toggle('view',!!w);if(w)lab.textContent=t('vw');cur.classList.toggle('big',!!b&&!w)});
   $$('[data-mag]').forEach(el=>{const x=gsap.quickTo(el,'x',{duration:.5,ease:'power3'}),y=gsap.quickTo(el,'y',{duration:.5,ease:'power3'});
     el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();x((e.clientX-r.left-r.width/2)*.22);y((e.clientY-r.top-r.height/2)*.3)});el.addEventListener('pointerleave',()=>{x(0);y(0)})});
   $$('[data-tilt]').forEach(el=>{gsap.set(el,{transformPerspective:900});const rx=gsap.quickTo(el,'rotationX',{duration:.6,ease:'power3'}),ry=gsap.quickTo(el,'rotationY',{duration:.6,ease:'power3'});
@@ -369,6 +410,7 @@ function initScroll(){
   addEventListener('load',()=>ScrollTrigger.refresh());document.fonts&&document.fonts.ready.then(()=>ScrollTrigger.refresh())}
 
 /* ================= boot ================= */
+try{document.fonts.load("24px 'Material Symbols Rounded'",'search').then(f=>{if(f&&f.length)document.documentElement.classList.add('mi')})}catch(e){}
 apply();chart();heroSets();initScroll();
 (async()=>{
   if(document.documentElement.classList.contains('bi')){try{sessionStorage.removeItem('cs_bolt')}catch(e){}
