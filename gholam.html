@@ -137,6 +137,28 @@ nav {
 }
 .nav-links a:hover { color: var(--gold); }
 .nav-links a:hover::before { opacity:1; }
+.nav-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: 'Cinzel', serif;
+  font-size: 11px; letter-spacing: 0.18em;
+  color: rgba(232,220,200,0.55);
+  text-decoration: none;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  border: 1px solid rgba(201,168,76,0.25);
+  clip-path: polygon(6px 0%, 100% 0%, calc(100% - 6px) 100%, 0% 100%);
+  transition: color 0.3s, border-color 0.3s, background 0.3s;
+}
+.nav-back:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.06);
+}
+.nav-back span { font-size: 14px; line-height: 1; }
+@media (max-width: 700px) {
+  .nav-back { font-size: 10px; padding: 7px 12px; letter-spacing: 0.12em; }
+}
+
 
 /* ─── HERO ─── */
 .hero {
@@ -691,7 +713,9 @@ body,html{max-width:100%;overflow-x:clip}
     <li><a href="#services">خدمات</a></li>
     <li><a href="#contact">تماس</a></li>
   </ul>
+  <a href="index.html" class="nav-back" title="بازگشت به صفحه اصلی"><span>←</span> بازگشت به سایت</a>
 </nav>
+
 
 <!-- HERO -->
 <section class="hero">

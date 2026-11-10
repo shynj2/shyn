@@ -74,6 +74,9 @@ footer{position:relative;z-index:1;text-align:center;padding:40px 5vw;color:#141
 }
 @media(prefers-reduced-motion:reduce){.hint{animation:none}}
 #brush{position:fixed;inset:0;z-index:6;pointer-events:none}
+@media(pointer:coarse){#brush{display:none!important}}
+
+
 #gname{position:fixed;top:3vh;inset-inline:0;text-align:center;z-index:1;pointer-events:none;opacity:0}
 #gname b{display:block;font:400 clamp(3.2rem,8vw,6rem)/1.05 "Zen Antique","Noto Serif JP","Hiragino Mincho ProN",serif;color:#14110f;text-shadow:0 0 34px rgba(240,232,214,.95),0 0 3px #efe6d2}
 #gname span{font-family:Lalezar,Vazirmatn,sans-serif;font-size:clamp(1.5rem,3.4vw,2.2rem);color:#c8372d;text-shadow:0 0 22px rgba(240,232,214,.95),0 0 3px #efe6d2}
@@ -219,7 +222,18 @@ body.no3d .sign .tap{display:none}
 html[dir=rtl] #back::before{content:"\2192"}
 #back:hover{border-color:var(--saf);color:var(--saf)}
 body.zoom-focus #back{opacity:0!important;pointer-events:none}
+
+/* ===== mobile analog stick ===== */
+#joy{position:fixed;left:50%;bottom:calc(28px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:40;width:118px;height:118px;border-radius:50%;background:rgba(20,17,15,.18);border:2px solid rgba(201,154,59,.55);box-shadow:inset 0 0 0 1px rgba(239,232,214,.25),0 8px 28px rgba(0,0,0,.28);touch-action:none;user-select:none;-webkit-user-select:none;display:none;align-items:center;justify-content:center;pointer-events:auto}
+#joy .knob{width:52px;height:52px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#efe8d6,#c9a25a 55%,#8a6a2a);border:2px solid rgba(20,17,15,.35);box-shadow:0 4px 14px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.35);pointer-events:none;transform:translate(0,0);transition:box-shadow .15s}
+#joy.active .knob{box-shadow:0 2px 8px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.25)}
+#joy .ring{position:absolute;inset:10px;border-radius:50%;border:1px dashed rgba(239,232,214,.28);pointer-events:none}
+@media(pointer:coarse),(max-width:820px){
+  #joy{display:flex}
+  body.zoom-focus #joy,body.no3d #joy{display:none!important}
+}
 </style>
+
 
 </head>
 <body>
@@ -234,6 +248,8 @@ body.zoom-focus #back{opacity:0!important;pointer-events:none}
 <button id="lang" type="button">English</button>
 <a id="back" href="index.html"></a>
 <button id="zoom-close" type="button" aria-label="close">×</button>
+<div id="joy" aria-label="joystick" role="application"><div class="ring"></div><div class="knob"></div></div>
+
 <div id="bar"></div>
 
 <main>
@@ -696,20 +712,103 @@ const SG=(function(){
 })();
 let cur=0,mx=0,my=0,t0=performance.now(),vis=true,hintHidden=false,lastF=performance.now();
 const hintEl=document.querySelector(".hint"),gnEl=document.getElementById("gname"),gnK=gnEl.firstChild,gnP=gnEl.lastChild;let gnI=-1,gnL="";
-addEventListener("pointermove",e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
+
+/* ===== mobile analog stick: Y = walk along path, X = look left/right ===== */
+const JOY=(function(){
+
+  const el=document.getElementById("joy");if(!el)return{active:false,x:0,y:0,look:0,step(){}};
+  const knob=el.querySelector(".knob"),R=46;
+  let pid=null,cx=0,cy=0,jx=0,jy=0,look=0;
+  function setKnob(x,y){knob.style.transform="translate("+x.toFixed(1)+"px,"+y.toFixed(1)+"px)"}
+  function onStart(e){
+    if(document.body.classList.contains("zoom-focus")||document.body.classList.contains("no3d"))return;
+    if(pid!==null)return;
+    const t=e.changedTouches?e.changedTouches[0]:e;
+    pid=t.identifier!==undefined?t.identifier:"mouse";
+    const r=el.getBoundingClientRect();cx=r.left+r.width/2;cy=r.top+r.height/2;
+    el.classList.add("active");move(t.clientX,t.clientY);e.preventDefault();
+  }
+  function onMove(e){
+    if(pid===null)return;
+    const ts=e.changedTouches||[e];
+    for(let i=0;i<ts.length;i++){const t=ts[i];if((t.identifier!==undefined?t.identifier:"mouse")===pid){move(t.clientX,t.clientY);e.preventDefault();break}}
+  }
+  function onEnd(e){
+    if(pid===null)return;
+    const ts=e.changedTouches||[e];
+    let ok=false;for(let i=0;i<ts.length;i++){if((ts[i].identifier!==undefined?ts[i].identifier:"mouse")===pid){ok=true;break}}
+    if(!ok&&e.type!=="mouseup"&&e.type!=="pointerup"&&e.type!=="pointercancel")return;
+    pid=null;jx=0;jy=0;el.classList.remove("active");setKnob(0,0);
+  }
+  function move(x,y){
+    let dx=x-cx,dy=y-cy,len=Math.hypot(dx,dy)||1;
+    if(len>R){dx=dx/len*R;dy=dy/len*R;len=R}
+    jx=dx/R;jy=dy/R;setKnob(dx,dy);
+  }
+  el.addEventListener("pointerdown",onStart,{passive:false});
+  addEventListener("pointermove",onMove,{passive:false});
+  addEventListener("pointerup",onEnd);addEventListener("pointercancel",onEnd);
+  el.addEventListener("touchstart",onStart,{passive:false});
+  addEventListener("touchmove",onMove,{passive:false});
+  addEventListener("touchend",onEnd);addEventListener("touchcancel",onEnd);
+  return{
+    get active(){return pid!==null},
+    get x(){return jx},
+    get y(){return jy},
+    get look(){return look},
+    step(dt){
+      /* head-turn: track stick fast while held, ease back when released */
+      if(pid!==null)look+=(jx-look)*Math.min(1,dt*12);
+      else look*=Math.max(0,1-dt*2.2);
+
+      /* vertical stick: push UP (negative jy) = walk forward, pull DOWN = walk back */
+      if(pid!==null&&Math.abs(jy)>.12&&!document.body.classList.contains("zoom-focus")){
+        const max=document.documentElement.scrollHeight-innerHeight;
+        if(max>0){
+          const speed=innerHeight*(0.55+Math.abs(jy)*1.1); /* px per second */
+          const next=Math.max(0,Math.min(max,scrollY+(-jy)*speed*dt));
+          if(next!==scrollY)scrollTo(0,next);
+        }
+      }
+
+    }
+  };
+})();
+
+addEventListener("pointermove",e=>{if(JOY.active)return;mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5});
 document.addEventListener("visibilitychange",()=>{vis=!document.hidden;if(vis)loop()});
+
 function loop(){if(!vis)return;requestAnimationFrame(loop);
+
  const t=(performance.now()-t0)/1000;
  const p=scrollP(),nowF=performance.now(),dtF=Math.min(.1,(nowF-lastF)/1000);lastF=nowF;
+ JOY.step(dtF);
  cur+=(p-cur)*.07;
  if(!hintHidden&&p>.02){hintHidden=true;if(hintEl)hintEl.classList.add("hidden")}
   const z=12-cur*(LEN-4);
   const fe=SG.step(dtF);
-  const bDist=Math.abs(z-bridgeZ),lookY=2.35+Math.max(0,1-bDist/9)*1.1+(still?0:-my*.65)-(bDist<7?Math.max(0,1-bDist/7)*.5:0);
-  C.position.set(still?0:mx*1.3,lookY,z);
-  const lx=mx*2.2,ly=2.7-my*.4-Math.max(0,1-bDist/9)*1.7,lz=z-18,fo=fe>0?SG.pose(fe,C):null;
+  /* pointer = subtle lean; joystick = head-turn (strong yaw so side boards come into view) */
+  const usingJoy=JOY.active||Math.abs(JOY.look)>.04;
+  const lookX=usingJoy?JOY.look:mx,lookY2=usingJoy?0:my;
+  const bDist=Math.abs(z-bridgeZ),lookY=2.35+Math.max(0,1-bDist/9)*1.1+(still?0:-lookY2*.65)-(bDist<7?Math.max(0,1-bDist/7)*.5:0);
+  /* keep body on the path; only a little lateral shift when turning head */
+  C.position.set(still?0:lookX*(usingJoy?.35:1.3),lookY,z);
+  let lx,ly,lz;
+  if(usingJoy){
+    /* yaw up to ~55° so the roadside scrolls swing into frame */
+    const yaw=lookX*0.95;
+    const dist=18;
+    lx=Math.sin(yaw)*dist;
+    ly=2.7-Math.max(0,1-bDist/9)*1.7;
+    lz=z-Math.cos(yaw)*dist;
+  }else{
+    lx=lookX*2.2;ly=2.7-lookY2*.4-Math.max(0,1-bDist/9)*1.7;lz=z-18;
+  }
+  const fo=fe>0?SG.pose(fe,C):null;
+
   /* click on a sign: camera glides off the road to face the board; closing glides back to the road */
   if(fo){C.position.lerp(fo.pos,fe);C.lookAt(lx+(fo.look.x-lx)*fe,ly+(fo.look.y-ly)*fe,lz+(fo.look.z-lz)*fe)}else C.lookAt(lx,ly,lz);
+
   C.updateMatrixWorld();SG.render(z,C,fe);
 
  const col=skyAt(cur);R.setClearColor(col);S.fog.color.copy(col);
@@ -745,6 +844,10 @@ function loop(){if(!vis)return;requestAnimationFrame(loop);
 loop()})()}
 window.__start=()=>{T0=performance.now();boot(0)};
 (function(){const c=document.getElementById("brush");if(!c)return;
+/* no floating brush on touch / mobile devices — desktop keeps it */
+if(matchMedia("(pointer:coarse)").matches){c.style.display="none";return}
+
+
 const x=c.getContext("2d");let W,H,D,sc,px=-200,py=0,ox=-200,oy=0,tx=.5,ty=.5,moved=0,ang=.6,seed=7;const segs=[],LIFE=1400;
 const rn=()=>(seed=seed*16807%2147483647)/2147483647;
 function rs(){W=innerWidth;H=innerHeight;D=Math.min(devicePixelRatio,2);c.width=W*D;c.height=H*D;c.style.width=W+"px";c.style.height=H+"px";x.setTransform(D,0,0,D,0,0);sc=Math.max(.55,Math.min(1.15,W/900))}rs();addEventListener("resize",rs);
